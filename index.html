@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCA Applicant Quiz Platform - Free Select</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* ------------------------------------- */
+    /* GLOBAL STYLES & LAYOUT */
+    /* ------------------------------------- */
+    :root {
+        --primary-color: #007bff; /* Blue for action/focus */
+        --success-color: #28a745; /* Green for correct */
+        --danger-color: #dc3545; /* Red for wrong/timer */
+        --light-bg: #f8f9fa;
+        --dark-text: #343a40;
+        --card-bg: #ffffff;
+        --border-radius: 8px;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: var(--light-bg);
+        margin: 0;
+        padding: 0;
+        color: var(--dark-text);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        padding: 20px;
+    }
+
+    /* ------------------------------------- */
+    /* HEADER & TIMER */
+    /* ------------------------------------- */
+    .header-bar {
+        width: 100%;
+        max-width: 1200px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: var(--card-bg);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        margin-bottom: 20px;
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+    }
+
+    .quiz-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .timer {
+        background: var(--danger-color);
+        color: white;
+        padding: 10px 20px;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        min-width: 100px;
+        text-align: center;
+    }
+
+    /* ------------------------------------- */
+    /* TAB NAVIGATION */
+    /* ------------------------------------- */
+    .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 25px;
+        padding: 10px;
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        width: 100%;
+        justify-content: center;
+    }
+
+    .tab {
+        padding: 10px 18px;
+        border-radius: var(--border-radius);
+        background: var(--light-bg);
+        color: var(--dark-text);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        border: 1px solid #dee2e6;
+    }
+
+    .tab:hover:not(.active) {
+        background: #e9ecef;
+    }
+
+    .tab.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        box-shadow: 0 2px 5px rgba(0, 123, 255, 0.4);
+    }
+    
+    .tab.completed {
+        background: var(--success-color);
+        color: white;
+        border-color: var(--success-color);
+    }
+
+    /* No 'locked' class needed, as all sets are freely selectable */
+
+    /* ------------------------------------- */
+    /* QUIZ CONTENT */
+    /* ------------------------------------- */
+    #sets {
+        width: 100%;
+        min-height: 400px; /* Give space for content */
+    }
+
+    .set-container {
+        display: none;
+        background: var(--card-bg);
+        padding: 30px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .set-container.active {
+        display: block;
+    }
+
+    .question {
+        margin-bottom: 25px;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 15px;
+    }
+
+    .question p {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    /* OPTIONS */
+    .option {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin: 10px 0;
+        padding: 12px 15px;
+        border-radius: var(--border-radius);
+        border: 1px solid #ced4da;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background-color: var(--card-bg);
+        color: var(--dark-text);
+        font-size: 1rem;
+    }
+
+    .option:hover:not([disabled]) {
+        background-color: #e2e6ea;
+        border-color: #adb5bd;
+    }
+
+    /* Instant Feedback */
+    .option.correct {
+        background-color: var(--success-color) !important;
+        color: white !important;
+        border-color: var(--success-color) !important;
+        font-weight: 600;
+        pointer-events: none; 
+    }
+
+    .option.wrong {
+        background-color: var(--danger-color) !important;
+        color: white !important;
+        border-color: var(--danger-color) !important;
+        font-weight: 600;
+        pointer-events: none; 
+        animation: pulse-red 0.3s;
+    }
+    
+    /* Disable all options after submission/selection */
+    .question.answered .option {
+        pointer-events: none;
+        cursor: default;
+    }
+
+
+    /* ------------------------------------- */
+    /* BUTTONS & SCORE */
+    /* ------------------------------------- */
+    .submit-btn {
+        padding: 12px 25px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+        margin-top: 15px;
+    }
+
+    .submit-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .set-score {
+        margin-top: 15px;
+        padding: 10px;
+        background: #eaf5ff;
+        border: 1px solid #b3d9ff;
+        border-radius: var(--border-radius);
+        font-weight: 700;
+        color: var(--primary-color);
+        font-size: 1.1rem;
+    }
+
+    #final-score {
+        margin-top: 30px;
+        padding: 20px;
+        background: var(--success-color);
+        color: white;
+        border-radius: var(--border-radius);
+        font-size: 1.8rem;
+        font-weight: 700;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+        width: 100%;
+        max-width: 600px;
+    }
+
+    /* ------------------------------------- */
+    /* ANIMATIONS */
+    /* ------------------------------------- */
+    @keyframes pulse-red {
+        0% {box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);}
+        70% {box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);}
+        100% {box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);}
+    }
+</style>
+</head>
+<body>
+
+<div class="header-bar">
+    <div class="quiz-title">MCA Entrance Tech Quiz</div>
+    <div class="timer" id="timer">10:00</div>
+</div>
+
+<div class="container">
+    <div class="tabs" id="tabs"></div>
+    <div id="sets"></div>
+    <div id="final-score"></div>
+</div>
+
+<script>
+    // =======================
+    // QUIZ DATA (10 Sets of 10 Questions)
+    // =======================
+    const sets = [
+        { title: "Moore's Law & Basic Units", questions: [
+            { question: "Moore's Law states that the number of transistors on a chip doubles approximately every", options: ["6 months", "12 months", "18 months", "24 months"], answer: 2, selected: null },
+            { question: "The effect of Moore's Law is primarily observed in:", options: ["Processor clock speed", "Transistor density", "Memory capacity", "All of the above"], answer: 3, selected: null },
+            { question: "Moore's Law was first proposed in:", options: ["1955", "1965", "1975", "1985"], answer: 1, selected: null },
+            { question: "The main limitation of Moore's Law today is due to:", options: ["Quantum effects", "Power dissipation", "Manufacturing costs", "All of the above"], answer: 3, selected: null },
+            { question: "According to Moore's Law, performance improvements in chips are due to:", options: ["Parallelism only", "Smaller transistor size", "Increased clock speed only", "Larger cache memory"], answer: 1, selected: null },
+            { question: "Which of the following is NOT a basic functional unit of a computer?", options: ["Input unit", "Output unit", "Memory unit", "Printer cartridge"], answer: 3, selected: null },
+            { question: "The ALU is responsible for:", options: ["Storing data", "Performing arithmetic and logic operations", "Managing I/O devices", "Fetching instructions"], answer: 1, selected: null },
+            { question: "The Control Unit primarily", options: ["Performs multiplication", "Directs data flow", "Stores instructions permanently", "Connects external devices"], answer: 1, selected: null },
+            { question: "The four basic operations of a computer system are:", options: ["Input, Process, Storage, Output", "Input, Calculation, Storage, Display", "Fetch, Decode, Execute, Print", "Control, Data, Address, I/O"], answer: 0, selected: null },
+            { question: "Which is an example of abstraction?", options: ["Binary to decimal conversion", "High-level programming languages", "Direct transistor programming", "Hexadecimal notation"], answer: 1, selected: null }
+        ]},
+        { title: "Basic Data Rep I (Binary/Hex)", questions: [
+            { question: "In computers, data is represented using:", options: ["Decimal system", "Binary system", "Hexadecimal system", "Octal system"], answer: 1, selected: null },
+            { question: "Which number system uses only two digits, 0 and 1?", options: ["Decimal", "Binary", "Octal", "Hexadecimal"], answer: 1, selected: null },
+            { question: "The base of the hexadecimal number system is:", options: ["8", "2", "10", "16"], answer: 3, selected: null },
+            { question: "In 8-bit representation, the maximum unsigned number is:", options: ["127", "255", "256", "512"], answer: 1, selected: null },
+            { question: "ASCII code represents how many characters?", options: ["64", "128", "256", "512"], answer: 1, selected: null },
+            { question: "The binary equivalent of decimal number 25 is:", options: ["11001", "10011", "11100", "10101"], answer: 0, selected: null },
+            { question: "The range of signed 8-bit integers is:", options: ["-128 to +127", "-255 to +255", "-127 to +127", "-64 to +63"], answer: 0, selected: null },
+            { question: "Which of the following is NOT a positional number system?", options: ["Binary", "Decimal", "Roman Numerals", "Octal"], answer: 2, selected: null },
+            { question: "The number of bits in a nibble is:", options: ["2", "4", "8", "16"], answer: 1, selected: null },
+            { question: "Which number system uses base 8?", options: ["Binary", "Octal", "Decimal", "Hexadecimal"], answer: 1, selected: null }
+        ]},
+        { title: "Data Rep II (Codes/Conversions)", questions: [
+            { question: "Floating point representation is used to represent:", options: ["Integers only", "Real numbers", "Characters only", "Boolean values"], answer: 1, selected: null },
+            { question: "Gray code is mainly used to:", options: ["Detect errors", "Minimize bit changes", "Encrypt data", "Represent negative numbers"], answer: 1, selected: null },
+            { question: "Excess-3 code is mainly used for:", options: ["Negative numbers", "Error correction", "Decimal arithmetic", "Floating point arithmetic"], answer: 2, selected: null },
+            { question: "The 2's complement of 1010 is:", options: ["0101", "0110", "1110", "1011"], answer: 1, selected: null },
+            { question: "Unicode can represent up to:", options: ["256 characters", "1024 characters", "65536 characters", "Infinite characters"], answer: 2, selected: null },
+            { question: "BCD stands for:", options: ["Binary Code Decimal", "Binary Coded Decimal", "Bitwise Coded Data", "Base Coded Decimal"], answer: 1, selected: null },
+            { question: "What is the decimal equivalent of (10101)₂?", options: ["21", "20", "19", "23"], answer: 0, selected: null },
+            { question: "Which code is non-weighted?", options: ["BCD", "Gray", "Octal", "Hexadecimal"], answer: 1, selected: null },
+            { question: "In hexadecimal, letter A represents decimal:", options: ["9", "10", "11", "12"], answer: 1, selected: null },
+            { question: "Which of the following is an error detecting code?", options: ["Hamming code", "Gray code", "ASCII", "Unicode"], answer: 0, selected: null }
+        ]},
+        { title: "FP, Number Sys & IPC Basics", questions: [
+            { question: "In IEEE 754 single precision, exponent bits are:", options: ["8", "23", "11", "7"], answer: 0, selected: null },
+            { question: "The mantissa in floating point representation contains:", options: ["Sign and magnitude", "Fractional part", "Whole number part", "Exponent"], answer: 1, selected: null },
+            { question: "The decimal number system is based on:", options: ["Base 2", "Base 8", "Base 10", "Base 16"], answer: 2, selected: null },
+            { question: "Which of the following is NOT used in data representation?", options: ["Binary", "Octal", "Decimal", "Roman Numerals"], answer: 3, selected: null },
+            { question: "The parity bit is used for:", options: ["Speed", "Error detection", "Encryption", "Compression"], answer: 1, selected: null },
+            { question: "1 KB equals:", options: ["1000 bytes", "1024 bytes", "512 bytes", "2048 bytes"], answer: 1, selected: null },
+            { question: "IPC stands for:", options: ["Inter-Process Communication", "Internal Process Communication", "Integrated Process Control", "Inter-Program Control"], answer: 0, selected: null },
+            { question: "Which of the following is NOT an IPC mechanism?", options: ["Pipes", "Message Queues", "Shared Memory", "Paging"], answer: 3, selected: null },
+            { question: "In client-server communication, sockets are used for:", options: ["Local function calls", "Network communication", "Hardware control", "File access"], answer: 1, selected: null },
+            { question: "Shared memory is:", options: ["Faster than message passing", "Slower than message passing", "Only for distributed systems", "Same as paging"], answer: 0, selected: null }
+        ]},
+        { title: "IPC Mechanisms I", questions: [
+            { question: "Semaphore is used for:", options: ["Error correction", "Synchronization", "Compilation", "Encryption"], answer: 1, selected: null },
+            { question: "Deadlock occurs when:", options: ["Processes execute simultaneously", "Processes wait indefinitely", "Resources are infinite", "Memory is swapped"], answer: 1, selected: null },
+            { question: "Which IPC mechanism is most efficient for small messages?", options: ["Shared memory", "Message queues", "Signals", "Remote procedure calls"], answer: 2, selected: null },
+            { question: "The key factor in IPC performance is:", options: ["CPU scheduling", "Context switching overhead", "User Interface design", "Compiler optimization"], answer: 1, selected: null },
+            { question: "In distributed systems, RPC stands for:", options: ["Remote Program Call", "Remote Procedure Call", "Random Process Communication", "Reliable Process Control"], answer: 1, selected: null },
+            { question: "The primary challenge in IPC is:", options: ["Data abstraction", "Synchronization", "Algorithm design", "File formatting"], answer: 1, selected: null },
+            { question: "Pipes are usually:", options: ["Unidirectional", "Bidirectional", "Random access", "Non-blocking always"], answer: 0, selected: null },
+            { question: "Signals are mainly used for:", options: ["File access", "Process communication", "Process termination alerts", "Device drivers only"], answer: 2, selected: null },
+            { question: "Which IPC is best suited for distributed systems?", options: ["Message queues", "Shared memory", "RPC", "Signals"], answer: 2, selected: null },
+            { question: "Which mechanism allows multiple processes to access common memory?", options: ["Message queue", "Shared memory", "Signals", "Sockets"], answer: 1, selected: null }
+        ]},
+        { title: "IPC II & Performance", questions: [
+            { question: "The performance of IPC depends heavily on:", options: ["Compiler version", "Cache and memory architecture", "Operating system GUI", "Input devices"], answer: 1, selected: null },
+            { question: "Synchronization primitives in IPC include:", options: ["Locks and semaphores", "Tokens only", "Signals only", "Pipes only"], answer: 0, selected: null },
+            { question: "Starvation is a condition where:", options: ["CPU overheats", "A process waits indefinitely for resources", "Memory is corrupted", "Data is lost in transmission"], answer: 1, selected: null },
+            { question: "Message passing is better suited for:", options: ["Small systems", "Large distributed systems", "Cache optimization", "Data compression"], answer: 1, selected: null },
+            { question: "Which IPC is implemented using system calls 'send()' and 'recv()'?", options: ["Pipes", "Message queues", "Sockets", "Shared memory"], answer: 2, selected: null },
+            { question: "Context switching overhead directly affects:", options: ["Data representation", "IPC performance", "Compiler optimization", "Disk scheduling"], answer: 1, selected: null },
+            { question: "Which scheduling avoids starvation?", options: ["FCFS", "Round Robin", "Priority Scheduling", "None"], answer: 1, selected: null },
+            { question: "Throughput in IPC refers to:", options: ["Number of processes executed per unit time", "Number of system calls per process", "Memory usage", "Cache hit ratio"], answer: 0, selected: null },
+            { question: "Latency in IPC refers to:", options: ["Delay in message delivery", "CPU scheduling time", "Disk access delay", "Interrupt handling time"], answer: 0, selected: null },
+            { question: "Which of these is NOT a synchronization mechanism?", options: ["Mutex", "Semaphore", "Shared memory", "Condition variables"], answer: 2, selected: null }
+        ]},
+        { title: "Abstraction I (Prog/OS)", questions: [
+            { question: "Performance degradation in IPC may result from:", options: ["High context switching", "Low CPU usage", "High cache hit ratio", "Efficient scheduling"], answer: 0, selected: null },
+            { question: "Abstraction in computer science means:", options: ["Hiding details", "Exposing all implementation", "Copying code", "Increasing complexity"], answer: 0, selected: null },
+            { question: "In programming, abstraction is achieved using:", options: ["Classes and interfaces", "Hardware only", "Operating systems", "Assembly language"], answer: 0, selected: null },
+            { question: "Abstraction is important because:", options: ["It hides complexity", "It slows execution", "It wastes memory", "It avoids compilation"], answer: 0, selected: null },
+            { question: "Which is NOT an example of abstraction?", options: ["Using a function without knowing its implementation", "Using a car accelerator", "CPU instruction set", "Viewing assembly code of all operations"], answer: 3, selected: null },
+            { question: "High-level languages provide:", options: ["More abstraction than assembly", "Less abstraction than assembly", "No abstraction", "Only hardware abstraction"], answer: 0, selected: null },
+            { question: "In operating systems, abstraction is used to:", options: ["Represent hardware resources", "Write assembly programs", "Eliminate software layers", "Slow down execution"], answer: 0, selected: null },
+            { question: "Which layer provides abstraction of hardware to applications?", options: ["Operating System", "Application software", "Compiler", "Firmware"], answer: 0, selected: null },
+            { question: "Abstract Data Types (ADTs) provide:", options: ["Implementation only", "Interface without implementation details", "Only raw memory representation", "Hardware optimization"], answer: 1, selected: null },
+            { question: "Virtual memory is an abstraction of:", options: ["CPU", "Disk storage as memory", "Cache", "Registers"], answer: 1, selected: null }
+        ]},
+        { title: "Abstraction II (Concepts/Benefits)", questions: [
+            { question: "Encapsulation differs from abstraction in that:", options: ["Encapsulation hides implementation, abstraction shows details", "Encapsulation hides data, abstraction hides complexity", "Encapsulation hides complexity, abstraction hides data", "Both are identical"], answer: 1, selected: null },
+            { question: "An API is an example of:", options: ["Abstraction", "Memory management", "Scheduling", "Data compression"], answer: 0, selected: null },
+            { question: "Abstraction helps improve:", options: ["Reusability", "Modularity", "Maintainability", "All of these"], answer: 3, selected: null },
+            { question: "Which is the highest level of abstraction in computers?", options: ["Application software", "Operating system", "Assembly code", "Machine language"], answer: 0, selected: null },
+            { question: "File system provides abstraction of:", options: ["Disk blocks", "CPU", "Memory cache", "Registers"], answer: 0, selected: null },
+            { question: "Device drivers are an abstraction of:", options: ["User Interface", "Hardware devices", "Application programs", "Data files"], answer: 1, selected: null },
+            { question: "SQL provides abstraction for:", options: ["File storage", "Database operations", "CPU scheduling", "OS kernel"], answer: 1, selected: null },
+            { question: "The main benefit of abstraction in software design is:", options: ["Easy understanding and maintenance", "Faster hardware", "Bigger memory", "Increased execution time"], answer: 0, selected: null },
+            { question: "Hardware abstraction layer is part of:", options: ["Operating system", "Database", "Compiler", "Network"], answer: 0, selected: null },
+            { question: "Abstraction improves software by:", options: ["Increasing reusability", "Improving modularity", "Hiding complexity", "All of these"], answer: 3, selected: null }
+        ]},
+        { title: "Abstraction III (Levels/Origin)", questions: [
+            { question: "Which is an example of abstraction in networking?", options: ["IP addressing", "TCP segments", "Application protocols like HTTP", "All of these"], answer: 3, selected: null },
+            { question: "The JVM provides abstraction of:", options: ["Hardware platform", "Database", "Network", "File system only"], answer: 0, selected: null },
+            { question: "The lowest level of abstraction in computer is:", options: ["Machine language", "Assembly", "High-level language", "Operating system"], answer: 0, selected: null },
+            { question: "Which of the following represents abstraction?", options: ["A steering wheel in a car", "Microprocessor design details", "Machine code listing", "Electric circuits"], answer: 0, selected: null },
+            { question: "In software engineering, UML diagrams provide:", options: ["Abstraction", "Implementation", "Compilation", "Execution"], answer: 0, selected: null },
+            { question: "The concept of abstraction originated from:", options: ["Software engineering", "Mathematics", "Physics", "Electronics"], answer: 1, selected: null },
+            { question: "Von-Neumann architecture is also known as:", options: ["Stored-program computer", "Harvard architecture", "Parallel computer", "Distributed system"], answer: 0, selected: null },
+            { question: "The main components of the Von-Neumann model are:", options: ["ALU, Memory, I/O, CPU", "Fetch, Decode, Execute, Store", "Control Unit, Data bus, Address bus", "Input, Output, Cache"], answer: 0, selected: null },
+            { question: "The main memory in Von-Neumann model stores:", options: ["Data only", "Instructions only", "Both data and instructions", "Only machine code"], answer: 2, selected: null },
+            { question: "The CPU in Von-Neumann architecture includes:", options: ["ALU and Control Unit", "Registers only", "Memory", "Input/Output"], answer: 0, selected: null }
+        ]},
+        { title: "Von-Neumann Model", questions: [
+            { question: "The bottleneck in Von-Neumann architecture is:", options: ["CPU speed", "Memory bandwidth", "Instruction fetch speed", "Von-Neumann bottleneck"], answer: 3, selected: null },
+            { question: "The Von-Neumann model is based on:", options: ["Sequential execution of instructions", "Parallel execution always", "Quantum processing", "Cloud computing"], answer: 0, selected: null },
+            { question: "In Von-Neumann architecture, instructions are executed in:", options: ["Fetch-decode-execute cycle", "Random order", "Parallel blocks", "Speculative manner always"], answer: 0, selected: null },
+            { question: "The control unit in Von-Neumann model is responsible for:", options: ["Arithmetic", "Input only", "Instruction sequencing and control", "Memory storage"], answer: 2, selected: null },
+            { question: "Program Counter (PC) holds:", options: ["Current instruction", "Address of next instruction", "Data value", "Memory address only"], answer: 1, selected: null },
+            { question: "Which type of memory does Von-Neumann model use?", options: ["Shared for instructions and data", "Separate for instructions and data", "Cache only", "Registers only"], answer: 0, selected: null },
+            { question: "Von-Neumann architecture was proposed in:", options: ["1945", "1950", "1965", "1970"], answer: 0, selected: null },
+            { question: "The ALU in Von-Neumann model performs:", options: ["Arithmetic and logical operations", "Memory access", "Control sequencing", "Input-output"], answer: 0, selected: null },
+            { question: "The instruction cycle includes:", options: ["Fetch, decode, execute", "Read, write, erase", "Input, output, store", "Allocate, deallocate"], answer: 0, selected: null },
+            { question: "The Von-Neumann bottleneck refers to:", options: ["Limited bandwidth between CPU and memory", "Small ALU size", "Inefficient control unit", "Lack of I/O devices"], answer: 0, selected: null }
+        ]}
+    ];
+
+    let currentSetIndex = null;
+    let timerInterval = null;
+    let timeLeft = 600; // 10 minutes (per set)
+    const setScores = Array(sets.length).fill(null);
+
+    const tabsDiv = document.getElementById('tabs');
+    const setsDiv = document.getElementById('sets');
+    const timerDiv = document.getElementById('timer');
+    const finalScoreDiv = document.getElementById('final-score');
+
+    const getCurrentSetData = () => sets[currentSetIndex];
+
+    // --- Tab and Initialization Logic ---
+
+    sets.forEach((set, index) => {
+        const tab = document.createElement('div');
+        tab.className = 'tab';
+        tab.textContent = `${index + 1}. ${set.title}`;
+        tab.dataset.index = index;
+        tabsDiv.appendChild(tab);
+
+        tab.addEventListener('click', () => {
+            // Check if the user is clicking the CURRENTLY ACTIVE tab (do nothing)
+            if (index === currentSetIndex) return;
+
+            // If the user tries to leave an active, *unsubmitted* set, warn them.
+            if (currentSetIndex !== null && setScores[currentSetIndex] === null) {
+                if (!confirm("Warning: You are leaving an unfinished set. Your progress in the current set will be lost. Continue?")) {
+                    return;
+                }
+            }
+            // Proceed to the selected set
+            startSet(index);
+        });
+    });
+    
+    function initializeQuiz() {
+        updateTabState();
+        startSet(0); // Start the first set immediately
+    }
+    
+    function updateTabState() {
+        let allCompleted = true;
+        document.querySelectorAll('.tab').forEach((t, i) => {
+            t.classList.remove('active', 'completed', 'locked');
+
+            if (setScores[i] !== null) {
+                t.classList.add('completed');
+            } else {
+                allCompleted = false;
+                // Since user can select ANY set, the 'locked' class is effectively removed,
+                // but we keep the style logic for non-active, non-completed sets.
+            }
+            // Add active state last
+            if (i === currentSetIndex) {
+                t.classList.add('active');
+            }
+        });
+
+        if (allCompleted) {
+            const total = setScores.reduce((a, b) => a + b, 0);
+            const totalQuestions = sets.reduce((sum, s) => sum + s.questions.length, 0);
+            finalScoreDiv.textContent = `🎯 Congratulations! Final Score: ${total}/${totalQuestions} (Quiz Complete)`;
+            clearInterval(timerInterval);
+            timerDiv.textContent = 'DONE';
+        } else {
+            finalScoreDiv.textContent = '';
+        }
+    }
+
+    // --- Timer Logic ---
+    function startTimer() {
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                alert("Time's up! Submitting the current set.");
+                // Ensure submitSet is called only if there is an active, unsubmitted set
+                if (currentSetIndex !== null && setScores[currentSetIndex] === null) {
+                    submitSet(sets[currentSetIndex], currentSetIndex);
+                } else {
+                    timerDiv.textContent = '00:00';
+                }
+            } else {
+                timeLeft--;
+                updateTimerDisplay();
+            }
+        }, 1000);
+    }
+
+    function resetTimer() {
+        clearInterval(timerInterval);
+        timeLeft = 600; // Reset to 10 minutes
+        updateTimerDisplay();
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        const seconds = (timeLeft % 60).toString().padStart(2, '0');
+        timerDiv.textContent = `${minutes}:${seconds}`;
+    }
+
+
+    // --- Set Management Logic ---
+
+    function startSet(index) {
+        currentSetIndex = index;
+        
+        // Reset question states only if starting a new, unsubmitted set
+        if (setScores[index] === null) {
+            sets[index].questions.forEach(q => q.selected = null); 
+            resetTimer(); // Reset timer only when starting a NEW set
+            startTimer();
+        } else {
+            clearInterval(timerInterval);
+            timerDiv.textContent = 'REVIEW';
+        }
+
+        renderSet(sets[index], index);
+        updateTabState();
+    }
+
+    function renderSet(set, setIndex) {
+        setsDiv.innerHTML = '';
+        const container = document.createElement('div');
+        container.className = 'set-container active';
+        const isCompleted = setScores[setIndex] !== null;
+
+        set.questions.forEach((q, qIndex) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question';
+            if (q.selected !== null || isCompleted) qDiv.classList.add('answered');
+
+            const qTitle = document.createElement('p');
+            qTitle.textContent = `${qIndex + 1}. ${q.question}`;
+            qDiv.appendChild(qTitle);
+
+            q.options.forEach((opt, oIndex) => {
+                const btn = document.createElement('button');
+                btn.className = 'option';
+                btn.textContent = opt;
+                btn.dataset.qIndex = qIndex;
+                btn.dataset.oIndex = oIndex;
+
+                if (!isCompleted) {
+                    // --- LIVE QUIZ MODE ---
+                    if (!qDiv.classList.contains('answered')) {
+                        btn.addEventListener('click', handleOptionClick);
+                    }
+                }
+                
+                // Apply visual feedback for review/instant mode
+                if (isCompleted || q.selected !== null) {
+                    if (q.selected === oIndex) {
+                        if (q.selected === q.answer) {
+                            btn.classList.add('correct');
+                        } else {
+                            btn.classList.add('wrong');
+                        }
+                    } else if (oIndex === q.answer) {
+                        btn.classList.add('correct');
+                    }
+                    // Disable clicks manually for all options in this question
+                    btn.removeEventListener('click', handleOptionClick);
+                    btn.setAttribute('disabled', 'true');
+                }
+
+                container.appendChild(qDiv);
+                qDiv.appendChild(btn);
+            });
+        });
+
+        // Submit Button (only show if not completed)
+        if (!isCompleted) {
+            const submitBtn = document.createElement('button');
+            submitBtn.className = 'submit-btn';
+            submitBtn.textContent = 'Submit Set & View Score';
+            submitBtn.addEventListener('click', () => submitSet(set, setIndex));
+            container.appendChild(submitBtn);
+        } else {
+             // Score Display in Review Mode
+            const scoreDiv = document.createElement('div');
+            scoreDiv.className = 'set-score';
+            scoreDiv.textContent = `✅ Set Completed. Final Score: ${setScores[setIndex]}/${set.questions.length}. Click another set tab to continue.`;
+            container.appendChild(scoreDiv);
+        }
+
+        setsDiv.appendChild(container);
+    }
+
+    // --- Option Click Logic (Instant Feedback) ---
+
+    function handleOptionClick(event) {
+        const selectedBtn = event.target;
+        const qDiv = selectedBtn.closest('.question');
+        const qIndex = parseInt(selectedBtn.dataset.qIndex);
+        const oIndex = parseInt(selectedBtn.dataset.oIndex);
+        const questionData = getCurrentSetData().questions[qIndex];
+
+        if (!qDiv.classList.contains('answered')) {
+            qDiv.classList.add('answered');
+            questionData.selected = oIndex;
+            
+            const isCorrect = oIndex === questionData.answer;
+            
+            // Apply visual feedback immediately
+            if (isCorrect) {
+                selectedBtn.classList.add('correct');
+            } else {
+                selectedBtn.classList.add('wrong');
+                // Highlight the correct answer
+                qDiv.querySelector(`.option:nth-child(${questionData.answer + 2})`).classList.add('correct'); 
+            }
+            
+            // Remove listeners from all options in this question
+            qDiv.querySelectorAll('.option').forEach(btn => {
+                btn.removeEventListener('click', handleOptionClick);
+                btn.setAttribute('disabled', 'true');
+            });
+        }
+    }
+
+
+    // --- Submission Logic ---
+
+    function submitSet(set, setIndex) {
+        clearInterval(timerInterval);
+
+        let score = 0;
+        set.questions.forEach((q) => {
+            // Score based on the stored selection
+            if (q.selected !== null && q.selected === q.answer) {
+                score++;
+            }
+        });
+
+        setScores[setIndex] = score;
+
+        alert(`Set ${setIndex + 1} Submitted! Your Score: ${score}/${set.questions.length}. Select any other set tab to continue.`);
+
+        // 1. Reset timer display to static REVIEW state
+        timerDiv.textContent = 'REVIEW';
+
+        // 2. Clear current index (no active set)
+        currentSetIndex = null;
+        
+        // 3. Re-render the set to show the score and the final answer review
+        renderSet(set, setIndex); 
+        
+        // 4. Update tab state (turn current tab green)
+        updateTabState(); 
+    }
+    
+    // Initialize the quiz when the page loads
+    window.onload = initializeQuiz;
+</script>
+</body>
+</html>
