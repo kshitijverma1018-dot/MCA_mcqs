@@ -392,6 +392,130 @@
             { question: "The ALU in Von-Neumann model performs:", options: ["Arithmetic and logical operations", "Memory access", "Control sequencing", "Input-output"], answer: 0, selected: null },
             { question: "The instruction cycle includes:", options: ["Fetch, decode, execute", "Read, write, erase", "Input, output, store", "Allocate, deallocate"], answer: 0, selected: null },
             { question: "The Von-Neumann bottleneck refers to:", options: ["Limited bandwidth between CPU and memory", "Small ALU size", "Inefficient control unit", "Lack of I/O devices"], answer: 0, selected: null }
+        ]},
+        // =======================
+        // NEW SETS ADDED FROM PDF (Starting from Addressing Modes)
+        // =======================
+        { title: "Addressing Modes & Cycles", questions: [
+            { question: "In immediate addressing mode, the operand is:", options: ["Stored in memory", "Part of the instruction", "Stored in a register", "Accessed via stack"], answer: 1, selected: null },
+            { question: "Which addressing mode uses a register to hold the operand's address?", options: ["Direct", "Register Indirect", "Immediate", "Indexed"], answer: 1, selected: null },
+            { question: "Base plus offset addressing mode adds an offset to a:", options: ["Register", "Base register", "Immediate value", "Stack pointer"], answer: 1, selected: null },
+            { question: "Which addressing mode is most efficient for accessing local variables?", options: ["Register-Relative", "Direct", "Indexed", "Immediate"], answer: 0, selected: null },
+            { question: "In stack addressing mode, operands are implicitly located:", options: ["In registers", "On the stack top", "In memory blocks", "Encoded in instruction"], answer: 1, selected: null },
+            { question: "Which addressing mode reduces Instruction size?", options: ["Immediate", "Register", "Indexed", "Direct"], answer: 1, selected: null },
+            { question: "Auto-increment addressing is typically used in:", options: ["Arrays", "Strings", "Loops", "All of these"], answer: 3, selected: null },
+            { question: "The instruction cycle consists of:", options: ["Fetch and execute", "Fetch, decode, execute", "Fetch and store", "Decode and execute"], answer: 1, selected: null },
+            { question: "Which register holds the address of the next instruction?", options: ["IR", "PC", "MAR", "MDR"], answer: 1, selected: null },
+            { question: "The decode phase of instruction cycle interprets:", options: ["Operand value", "Opcode", "Address", "Flag bits"], answer: 1, selected: null }
+        ]},
+        { title: "Instruction Cycles & RISC I", questions: [
+            { question: "The execution phase involves:", options: ["Decoding instruction", "Performing the operation", "Fetching instruction", "Saving PC"], answer: 1, selected: null },
+            { question: "Interrupts affect which cycle?", options: ["Fetch", "Decode", "Execute", "Instruction cycle"], answer: 3, selected: null },
+            { question: "The instruction register (IR) holds:", options: ["Next instruction address", "Current Instruction", "Operand value", "Program data"], answer: 1, selected: null },
+            { question: "MAR is used for:", options: ["Address of memory location", "Data storage", "Instruction decoding", "Status flag"], answer: 0, selected: null },
+            { question: "The CPU repeats instruction cycle until:", options: ["Memory overflow", "Halt instruction is encountered", "PC is zero", "Interrupt occurs"], answer: 1, selected: null },
+            { question: "RISC stands for:", options: ["Reduced Instruction Set Computer", "Random Instruction Set Computer", "Repeated Instruction Set Code", "Register Instruction Storage Computer"], answer: 0, selected: null },
+            { question: "RISC emphasizes:", options: ["Simple instructions executed quickly", "Complex instructions", "Variable length instructions", "Large instruction sets"], answer: 0, selected: null },
+            { question: "In RISC architecture, most instructions:", options: ["Execute in one clock cycle", "Take multiple cycles", "Are micro-coded", "Need multiple addressing modes"], answer: 0, selected: null },
+            { question: "Pipelining is efficiently supported in:", options: ["CISC", "RISC", "Harvard architecture only", "x86"], answer: 1, selected: null },
+            { question: "RISC instructions are generally:", options: ["Complex and long", "Simple and fixed length", "Variable length", "Slow to execute"], answer: 1, selected: null }
+        ]},
+        { title: "RISC II & CISC I", questions: [
+            { question: "Load/store architecture is characteristic of:", options: ["RISC", "CISC", "x86", "VLIW"], answer: 0, selected: null },
+            { question: "Which is a well-known RISC architecture?", options: ["ARM", "x86", "VAX", "8086"], answer: 0, selected: null },
+            { question: "The advantage of RISC is:", options: ["Simple decoding and faster execution", "Complex instructions", "Smaller code size", "No need for registers"], answer: 0, selected: null },
+            { question: "RISC processors usually have:", options: ["Few registers", "Many registers", "No registers", "Only stack registers"], answer: 1, selected: null },
+            { question: "Compiler optimization is crucial for:", options: ["RISC", "CISC", "Both RISC and CISC", "Neither"], answer: 0, selected: null },
+            { question: "CISC stands for:", options: ["Complex Instruction Set Computer", "Central Instruction Set Control", "Computed Instruction Set Code", "Control System Computer"], answer: 0, selected: null },
+            { question: "CISC instructions are generally:", options: ["Simple and uniform", "Complex and variable length", "Fixed length", "Executed in one cycle"], answer: 1, selected: null },
+            { question: "Microprogramming is commonly used in:", options: ["RISC", "CISC", "Harvard", "VLIW"], answer: 1, selected: null },
+            { question: "Which processor family is based on CISC?", options: ["ARM", "MIPS", "Intel x86", "RISC-V"], answer: 2, selected: null },
+            { question: "A key advantage of CISC is:", options: ["Reduced memory usage with complex instructions", "Simple hardware", "High pipelining efficiency", "Few instructions"], answer: 0, selected: null }
+        ]},
+        { title: "CISC II & CPU Registers", questions: [
+            { question: "CISC instructions often access:", options: ["Only registers", "Both memory and registers", "Only stack", "Cache only"], answer: 1, selected: null },
+            { question: "Which was an early CISC processor?", options: ["Intel 8086", "ARM7", "RISC-V", "MIPS"], answer: 0, selected: null },
+            { question: "CISC processors usually need:", options: ["Fewer transistors", "More complex control unit", "Simpler decoding", "Uniform instructions"], answer: 1, selected: null },
+            { question: "Instruction length in CISC is:", options: ["Fixed", "Variable", "Only 16-bit", "Always 32-bit"], answer: 1, selected: null },
+            { question: "CISC design reduces:", options: ["Number of instructions per program", "Execution time", "Instruction decoding complexity", "Memory usage"], answer: 0, selected: null },
+            { question: "Which register stores the address of the next instruction?", options: ["PC", "IR", "MAR", "MDR"], answer: 0, selected: null },
+            { question: "The accumulator is mainly used for:", options: ["Storing instructions", "Arithmetic operations", "Program counter", "Status flags"], answer: 1, selected: null },
+            { question: "Which register stores the current instruction?", options: ["PC", "IR", "MAR", "MDR"], answer: 1, selected: null },
+            { question: "MAR stands for:", options: ["Memory Address Register", "Main Arithmetic Register", "Master Address Register", "Machine Arithmetic Register"], answer: 0, selected: null },
+            { question: "MDR stores:", options: ["Instruction codes", "Data read or written to memory", "Program counter value", "Flags"], answer: 1, selected: null }
+        ]},
+        { title: "CPU Registers II & Decoding I", questions: [
+            { question: "General purpose registers are used to:", options: ["Hold temporary data and operands", "Store machine code", "Decode instructions", "Maintain status flags"], answer: 0, selected: null },
+            { question: "Which register indicates program status?", options: ["PC", "IR", "PSW", "MDR"], answer: 2, selected: null },
+            { question: "Stack Pointer (SP) stores:", options: ["Top address of stack", "Instruction address", "Operand value", "Opcode"], answer: 0, selected: null },
+            { question: "Instruction decoding is done by:", options: ["ALU", "Control unit", "MAR", "MDR"], answer: 1, selected: null },
+            { question: "Decoding interprets:", options: ["Operand value", "Opcode", "Address only", "Flags"], answer: 1, selected: null },
+            { question: "Opcode specifies:", options: ["Operation to perform", "Operand address", "Register number", "Program counter"], answer: 0, selected: null },
+            { question: "The complexity of decoding increases in:", options: ["RISC", "CISC", "Both", "Harvard"], answer: 1, selected: null },
+            { question: "Instruction decoder generates:", options: ["Control signals", "Address values", "Interrupts", "Cache lines"], answer: 0, selected: null },
+            { question: "Which register supplies input to decoder?", options: ["IR", "PC", "MAR", "MDR"], answer: 0, selected: null },
+            { question: "A micro-op is produced during:", options: ["Execution", "Decoding", "Memory access", "Interrupt handling"], answer: 1, selected: null }
+        ]},
+        { title: "Instruction Execution I", questions: [
+            { question: "Execution phase is performed by:", options: ["Control unit", "ALU", "MAR", "MDR"], answer: 1, selected: null },
+            { question: "Memory read/write happens during", options: ["Fetch", "Execute", "Decode", "Interrupt"], answer: 1, selected: null },
+            { question: "ALU operations occur in which phase?", options: ["Decode", "Fetch", "Execute", "Interrupt"], answer: 2, selected: null },
+            { question: "Jump Instructions alter:", options: ["Program Counter", "Instruction Register", "ALU result", "Status Register"], answer: 0, selected: null },
+            { question: "Execution cycle completes when:", options: ["Instruction result is stored", "PC Increments", "Instruction is decoded", "ALU resets"], answer: 0, selected: null },
+            { question: "Operand fetching is part of:", options: ["Execution", "Decode", "Fetch", "Interrupt"], answer: 0, selected: null },
+            { question: "Conditional branch execution depends on:", options: ["Status flags", "PC only", "MAR", "Decoder"], answer: 0, selected: null },
+            { question: "Instruction format defines:", options: ["Layout of opcode and operands", "Memory address only", "CPU architecture", "Cache size"], answer: 0, selected: null },
+            { question: "Fixed-length instruction format is typical in:", options: ["RISC", "CISC", "Harvard only", "x86"], answer: 0, selected: null },
+            { question: "Variable-length instructions are found in:", options: ["RISC", "CISC", "Harvard", "Load-store"], answer: 1, selected: null }
+        ]},
+        { title: "Instruction Format & Types I", questions: [
+            { question: "Instruction encoding determines:", options: ["Binary representation of instructions", "Cache design", "I/O mapping", "Interrupt priority"], answer: 0, selected: null },
+            { question: "The field that specifies operation is:", options: ["Opcode field", "Operand field", "Address field", "Register field"], answer: 0, selected: null },
+            { question: "Instruction length is generally:", options: ["8, 16, 32, or 64 bits", "Only 32 bits", "Only 64 bits", "Fixed 8 bits"], answer: 0, selected: null },
+            { question: "Which instruction format has only opcode and no operand?", options: ["Zero-address format", "One-address format", "Two-address format", "Three-address format"], answer: 0, selected: null },
+            { question: "In a three-address instruction, number of operands is:", options: ["1", "2", "3", "4"], answer: 2, selected: null },
+            { question: "Instruction set defines:", options: ["Operations a CPU can perform", "Cache size", "Bus width", "Clock speed"], answer: 0, selected: null },
+            { question: "Data transfer instructions include:", options: ["MOV", "ADD", "SUB", "MUL"], answer: 0, selected: null },
+            { question: "Control transfer instructions alter:", options: ["Program flow", "Operand values", "ALU result only", "Register size"], answer: 0, selected: null },
+            { question: "Arithmetic instructions include:", options: ["ADD, SUB", "MOV, LOAD", "JMP, CALL", "PUSH, POP"], answer: 0, selected: null },
+            { question: "Logical Instructions include:", options: ["AND, OR, XOR", "JMP, CALL", "MOV, PUSH", "ADD, SUB"], answer: 0, selected: null }
+        ]},
+        { title: "Instruction Types II & RISC-V I", questions: [
+            { question: "Machine instructions are executed by:", options: ["CPU directly", "Compiler", "Linker", "Assembler"], answer: 0, selected: null },
+            { question: "Instruction set architecture (ISA) acts as interface between:", options: ["Hardware and software", "Memory and cache", "OS and devices", "Compiler and linker"], answer: 0, selected: null },
+            { question: "Control instructions include:", options: ["JMP", "CALL", "RET", "All of these"], answer: 3, selected: null },
+            { question: "RISC-V instructions are of length:", options: ["Fixed 32-bit", "Variable always", "8-bit only", "16-bit only"], answer: 0, selected: null },
+            { question: "RISC-V supports which addressing mode?", options: ["Immediate", "Register", "Base + offset", "All of these"], answer: 3, selected: null },
+            { question: "The instruction 'ADD x1, x2, x3' means:", options: ["x1 = x2 + x3", "x2 = x1 + x3", "x3 = x1 + x2", "x1 = x3 + 1"], answer: 0, selected: null },
+            { question: "In RISC-V, LW instruction is used for:", options: ["Load word from memory", "Load byte", "Logical AND", "Left shift word"], answer: 0, selected: null },
+            { question: "The R-type instructions in RISC-V are:", options: ["Register-register operations", "Memory access", "Immediate operations", "Control Instructions"], answer: 0, selected: null },
+            { question: "The JAL instruction is used for:", options: ["Unconditional jump", "Arithmetic", "Logic operations", "Memory write"], answer: 0, selected: null },
+            { question: "Which RISC-V instruction stores data into memory?", options: ["SW", "LW", "ADD", "BEQ"], answer: 0, selected: null }
+        ]},
+        { title: "RISC-V II & x86 I", questions: [
+            { question: "RISC-V uses how many general-purpose registers?", options: ["16", "32", "64", "128"], answer: 1, selected: null },
+            { question: "The Instruction 'BEQ x1, x2, label' means:", options: ["Branch if x1 = x2", "Branch if x1 != x2", "Branch if x1 < x2", "Branch always"], answer: 0, selected: null },
+            { question: "RISC-V ISA design follows:", options: ["Load-store principle", "Microcoded execution", "Complex addressing modes", "Variable instruction length"], answer: 0, selected: null },
+            { question: "x86 instructions are generally:", options: ["Variable length", "Fixed length", "8-bit only", "64-bit only"], answer: 0, selected: null },
+            { question: "The instruction 'MOV AX, BX' in x86 means:", options: ["Copy BX to AX", "Copy AX to BX", "Add AX and BX", "Compare AX and BX"], answer: 0, selected: null },
+            { question: "In x86, 'PUSH AX' does what?", options: ["Pushes AX onto stack", "Pops AX from stack", "Moves AX to BX", "Clears AX"], answer: 0, selected: null },
+            { question: "The instruction 'POP BX' does:", options: ["Pops value from stack into BX", "Pushes BX onto stack", "Clears BX", "Copies AX to BX"], answer: 0, selected: null },
+            { question: "Which x86 instruction is used for subroutine call?", options: ["JMP", "CALL", "RET", "MOV"], answer: 1, selected: null },
+            { question: "RET instruction in x86:", options: ["Returns from subroutine", "Jumps unconditionally", "Ends program", "Clears registers"], answer: 0, selected: null },
+            { question: "Which x86 instruction is used for comparison?", options: ["CMP", "SUB", "TEST", "MOV"], answer: 0, selected: null }
+        ]},
+        { title: "x86 II", questions: [
+            { question: "The instruction 'JZ label' in x86 means:", options: ["Jump if zero flag is set", "Jump always", "Jump If greater", "Jump if carry"], answer: 0, selected: null },
+            { question: "Which instruction is used to perform logical AND in x86?", options: ["OR", "XOR", "AND", "TEST"], answer: 2, selected: null },
+            { question: "The instruction 'INC AX' does:", options: ["Increment AX by 1", "Decrement AX by 1", "Clear AX", "Multiply AX by 2"], answer: 0, selected: null },
+            { question: "Which instruction decrements a register in x86?", options: ["DEC", "SUB", "INC", "NEG"], answer: 0, selected: null },
+            { question: "INT 21H in DOS x86 assembly is used for:", options: ["System services", "Interrupt masking", "File closing", "Power control"], answer: 0, selected: null },
+            { question: "Which x86 instruction is used for signed multiplication?", options: ["IMUL", "MUL", "DIV", "IDIV"], answer: 0, selected: null },
+            { question: "Which x86 instruction clears the accumulator (AX)?", options: ["XOR AX, AX", "SUB AX, AX", "MOV AX, 0", "All of these"], answer: 3, selected: null },
+            // Fillers to reach 10 questions and complete the set
+            { question: "What is the primary role of the Program Status Word (PSW)?", options: ["Store memory address", "Hold current instruction", "Store flags and control bits", "Store data temporarily"], answer: 2, selected: null },
+            { question: "A nibble is equivalent to how many bits?", options: ["2 bits", "4 bits", "8 bits", "16 bits"], answer: 1, selected: null },
+            { question: "Which layer hides hardware complexity in a computer system?", options: ["Application Layer", "System Layer (OS)", "User Interface Layer", "Memory Layer"], answer: 1, selected: null }
         ]}
     ];
 
